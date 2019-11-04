@@ -5,10 +5,13 @@
 	<title>Ajouter une randonnée</title>
 	<link rel="stylesheet" href="css/basics.css" media="screen" title="no title" charset="utf-8">
 </head>
+<?php
+	
+?>
 <body>
-	<a href="/php-pdo/read.php">Liste des données</a>
+	<a href="/read.php">Liste des données</a>
 	<h1>Ajouter</h1>
-	<form action="" method="post">
+	<form action="/create.php" method="post">
 		<div>
 			<label for="name">Name</label>
 			<input type="text" name="name" value="">
@@ -17,7 +20,7 @@
 		<div>
 			<label for="difficulty">Difficulté</label>
 			<select name="difficulty">
-				<option value="très facile">Très facile</option>
+				<option default value="très facile">Très facile</option>
 				<option value="facile">Facile</option>
 				<option value="moyen">Moyen</option>
 				<option value="difficile">Difficile</option>
@@ -39,5 +42,28 @@
 		</div>
 		<button type="submit" name="button">Envoyer</button>
 	</form>
+
+<?php
+
+include("connexion.php");
+
+if (!empty($_POST["name"]) && !empty($_POST["difficulty"]) && !empty($_POST["distance"]) && !empty($_POST["duration"]) && !empty($_POST["height_difference"])) {
+
+	$pre = $pdo->prepare("INSERT INTO hiking(name, difficulty, distance, duration, height_difference) VALUES (:name, :difficulty, :distance, :duration, :height_difference)");
+ 
+	$pre->bindParam(":name", $_POST['name']);$pre->bindParam(":difficulty", $_POST['difficulty']);
+	$pre->bindParam(":distance", $_POST['distance']);
+	$pre->bindParam(":duration", $_POST['duration']);	
+	$pre->bindParam(":height_difference", $_POST['height_difference']);	
+
+	$pre->execute();
+
+	echo "Les données ont bien été ajoutées";
+	
+}else{
+	echo "Tous les champs doivent être renseignés";
+}
+
+?>
 </body>
 </html>
